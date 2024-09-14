@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DZ1
+﻿namespace DZ1
 {
     internal class GameSolver
     {
@@ -14,7 +12,7 @@ namespace DZ1
 
         public GameSolver()
         {
-            this.tryLimit = 10000;
+            this.tryLimit = 1000000;
             this.finalState = new GameState(new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 0}) ;
             this.coef = 1;
             this.logger = new FifteenLogger();
@@ -37,9 +35,9 @@ namespace DZ1
         {
             var rootNode = new GameTreeNode(rootState);
             var curChild = rootNode;
-            logger.Log(curChild.data, finalState, coef);
+            var tries = 1;
+            logger.Log(curChild.data, tries, finalState, coef);
 
-            var tries = 0;
 
             var allChildren = new List<GameState>() { rootState };
             var choiceHistory = new List<GameState>() { };
@@ -48,17 +46,41 @@ namespace DZ1
             {
                 curChild.SpawnChildren(allChildren);
                 curChild = rootNode.FindBestChild(choiceHistory, finalState, coef);
-                logger.Log(curChild.data, finalState, coef);
+                logger.Log(curChild.data, tries, finalState, coef);
                 ++tries;
             }
 
-            //if (curChild.CheckCompletion(finalState))
-            //{
-            //    logger.LogSuccess();
-            //    return;
-            //}
+            var path = new List<GameTreeData>();
 
-            //logger.LogFailure();
+            while (curChild.parent != null)
+            {
+                path.Add(curChild.data);
+                curChild = curChild.parent;
+            }
+
+            path.Reverse();
+
+            logger.Log(path, finalState, coef);
+        }
+
+        public int SolveSilently()
+        {
+            var rootNode = new GameTreeNode(rootState);
+            var curChild = rootNode;
+            var tries = 1;
+
+
+            var allChildren = new List<GameState>() { rootState };
+            var choiceHistory = new List<GameState>() { };
+
+            while (!curChild.CheckCompletion(finalState) && tries <= tryLimit)
+            {
+                curChild.SpawnChildren(allChildren);
+                curChild = rootNode.FindBestChild(choiceHistory, finalState, coef);
+                ++tries;
+            }
+
+            return tries;
         }
     }
 }

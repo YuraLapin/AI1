@@ -48,5 +48,22 @@ namespace DZ1
 
             return sb.ToString();
         }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb = sb.Append('\n');
+
+            for (int i = 0; i < this.gameState.size; ++i)
+            {
+                for (int j = 0; j < this.gameState.size; ++j)
+                {
+                    sb = sb.Append(this.gameState.gameField[i, j].ToString() + ' ');
+                }
+                sb = sb.Append('\n');
+            }
+
+            return sb.ToString();
+        }
     }
 }

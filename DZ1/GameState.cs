@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-
-namespace DZ1
+﻿namespace DZ1
 {
     internal class GameState
     {
